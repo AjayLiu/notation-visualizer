@@ -1,5 +1,5 @@
 [build]
-    command = "npm run build && npm run export"
+    command = "yarn run build"
     publish = "out"
 
 [[plugins]]
