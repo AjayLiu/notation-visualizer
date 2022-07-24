@@ -1,0 +1,16 @@
+[build]
+    command = "npm run build && npm run export"
+    publish = "out"
+
+[[plugins]]
+  package = "netlify-plugin-image-optim"
+[[plugins]]
+  package = "netlify-plugin-inline-source"
+[[plugins]]
+  package = "netlify-plugin-minify-html"
+[[plugins]]
+  package = "netlify-plugin-cache-nextjs"
+[[plugins]]
+  package = "@netlify/plugin-sitemap"
+[[plugins]]
+  package = "netlify-plugin-submit-sitemap"
