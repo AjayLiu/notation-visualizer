@@ -7,7 +7,7 @@ import Text from "./Text";
 const Footer: React.FC = () => {
     const imgPath = "https://ajayliu.com/img";
     // MAKE SURE TO CHANGE THIS LINK BELOW
-    const projectRepoLink = "https://github.com/AjayLiu/ajayliu.com";
+    const projectRepoLink = "https://github.com/AjayLiu/notation-visualizer";
     return (
         <footer className="bg-ajay-dark flex flex-col-reverse items-center w-full m-auto py-5 mt-48 ">
             <Text>
@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
                     }}
                 />
                 <SocialIcon
-                    href="https://www.youtube.com/channel/UClr6XCaguPeM0g7UL6Lvs3g"
+                    href="https://www.youtube.com/channel/UCompAYRB224zqCPDyexvmng"
                     img={{
                         src: `${imgPath}/youtube.svg`,
                         alt: "Youtube logo",
