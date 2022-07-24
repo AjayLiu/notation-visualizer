@@ -6,7 +6,7 @@
         "dev": "next",
         "build": "next build",
         "start": "next start",
-        "export": "yarn build && next export"
+        "export": "next build && next export"
     },
     "dependencies": {
         "classnames": "^2.3.1",
