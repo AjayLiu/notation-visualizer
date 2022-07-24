@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
     // MAKE SURE TO CHANGE THIS LINK BELOW
     const projectRepoLink = "https://github.com/AjayLiu/notation-visualizer";
     return (
-        <footer className="bg-ajay-dark flex flex-col-reverse items-center w-full m-auto py-5 mt-48 ">
+        <footer className="bg-ajay-dark flex flex-col-reverse items-center w-full m-auto py-5 mt-48 text-center">
             <Text>
                 © {new Date().getFullYear()}{" "}
                 <ExternalLink href="https://ajayliu.com">Ajay Liu</ExternalLink>
