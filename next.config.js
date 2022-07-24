@@ -4,4 +4,9 @@ module.exports = {
         formats: ["image/avif", "image/webp"],
         unoptimized: true,
     },
+    experimental: {
+        images: {
+            unoptimized: true,
+        },
+    },
 };
