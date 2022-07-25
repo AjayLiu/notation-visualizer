@@ -1,8 +1,8 @@
 <p align="center">
-  <h3 align="center">Next.js Boilerplate</h3>
+  <h3 align="center">Notation Visualizer</h3>
 
   <p align="center">
-    My personal template for Next.js projects.
+    Visualize how infix/prefix/postfix notation is evaluated with trees and stacks in an interactive website!
     <br />
 </p>
 
@@ -35,13 +35,13 @@
 
 ## About The Project
 
-I usually use this boilerplate for any new Next.js project I made. This is tailor made to be deployed via Netlify.
+I learned about infix/prefix/postfix notation during my senior year of high school and I find it fascinating that you can evaluate them using both trees and stacks! It's a great way to learn about inorder/preorder/postorder traversal and basic computer science!
 
 ### Built With
 
 -   [Next.js](https://nextjs.org/)
 -   [React](https://reactjs.org/)
--   [SCSS](https://sass-lang.com/)
+-   [TailwindCSS](https://tailwindcss.com/)
 -   [Netlify](https://www.netlify.com/)
 
 <!-- GETTING STARTED -->
@@ -92,10 +92,8 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Ajay Liu - contact@ajayliu.com
 
-Project Link: [https://github.com/AjayLiu/next-js-boilerplate](https://github.com/AjayLiu/next-js-boilerplate)
+Project Link: [https://github.com/AjayLiu/notation-visualizer](https://github.com/AjayLiu/notation-visualizer)
 
 <!-- ACKNOWLEDGEMENTS -->
 
 ## Acknowledgements
-
--   [cassidoo/next-netlify-starter](https://github.com/cassidoo/next-netlify-starter)
