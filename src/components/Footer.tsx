@@ -1,4 +1,3 @@
-import { NextCookies } from "next/dist/server/web/spec-extension/cookies";
 import Image from "next/image";
 import React from "react";
 import ExternalLink from "./ExternalLink";
@@ -56,7 +55,7 @@ const Footer: React.FC = () => {
                             width={60}
                             height={60}
                         />
-                        <Text>View this project on Github</Text>
+                        <Text>Contribute to this project on Github</Text>
                     </div>
                 </ExternalLink>
             </div>

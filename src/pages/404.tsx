@@ -1,9 +1,16 @@
+import InternalLink from "@components/InternalLink";
+import Layout from "@components/Layout";
+import Text from "@components/Text";
+
 const FourOhFour: React.FC = () => {
     return (
-        <>
-            <h1>404 - Page Not Found :(</h1>
-            <a href="../">Click me to go to home page</a>
-        </>
+        <Layout title="Page Not Found :(">
+            <InternalLink href={"/"}>
+                <div className="text-lg w-fit m-auto my-12">
+                    <Text>Click me to return to home page!</Text>
+                </div>
+            </InternalLink>
+        </Layout>
     );
 };
 export default FourOhFour;
