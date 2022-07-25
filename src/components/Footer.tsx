@@ -1,12 +1,11 @@
 import Image from "next/image";
 import React from "react";
+import { REPO_LINK } from "src/shared";
 import ExternalLink from "./ExternalLink";
 import SocialIcon from "./SocialIcon";
 import Text from "./Text";
 const Footer: React.FC = () => {
     const imgPath = "https://ajayliu.com/img";
-    // MAKE SURE TO CHANGE THIS LINK BELOW
-    const projectRepoLink = "https://github.com/AjayLiu/notation-visualizer";
     return (
         <footer className="bg-ajay-dark flex flex-col-reverse items-center w-full m-auto py-5 mt-48 text-center">
             <Text>
@@ -48,7 +47,7 @@ const Footer: React.FC = () => {
                 />
             </div>
             <div>
-                <ExternalLink href={projectRepoLink}>
+                <ExternalLink href={REPO_LINK}>
                     <div className="flex items-center justify-evenly w-80">
                         <Image
                             src={`${imgPath}/repo.svg`}

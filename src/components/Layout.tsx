@@ -1,7 +1,9 @@
 import Head from "next/head";
 import Footer from "@components/Footer";
 import Header from "@components/Header";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
+import GithubCorner from "react-github-corner";
+import { REPO_LINK, WEBSITE_LINK } from "src/shared";
 
 interface Props {
     children: ReactNode;
@@ -24,13 +26,10 @@ const Layout: React.FC<Props> = (props) => {
                 />
                 <meta property="og:title" content="Notation Visualizer" />
                 <meta property="og:type" content="website" />
-                <meta
-                    property="og:url"
-                    content="https://notation-visualizer.ajayliu.com"
-                />
+                <meta property="og:url" content={WEBSITE_LINK} />
                 <meta
                     property="og:image"
-                    content="https://notation-visualizer.ajayliu.com/img/calculator.png"
+                    content={`${WEBSITE_LINK}/img/calculator.png`}
                 />
                 <meta
                     property="og:description"
@@ -43,6 +42,7 @@ const Layout: React.FC<Props> = (props) => {
                 <main className="min-h-[60vh]">{props.children}</main>
 
                 <Footer />
+                <GithubCorner href={REPO_LINK} />
             </div>
         </>
     );

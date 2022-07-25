@@ -12,14 +12,14 @@ const Navbar: React.FC = () => {
                 </li>
                 <li>|</li>
                 <li>
-                    <InternalLink href={"/"}>
-                        <Text>Home</Text>
+                    <InternalLink href={"/tree"}>
+                        <Text>Tree</Text>
                     </InternalLink>
                 </li>
                 <li>|</li>
                 <li>
                     <InternalLink href={"/"}>
-                        <Text>Home</Text>
+                        <Text>Stack</Text>
                     </InternalLink>
                 </li>
             </ul>
