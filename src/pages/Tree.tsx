@@ -9,7 +9,7 @@ import {
     RawNodeDatum,
     RenderCustomNodeElementFn,
 } from "react-d3-tree/lib/types/common";
-import { CalcTreeNode } from "src/types";
+import { MyTreeNode } from "src/types";
 
 const TreePage: React.FC = () => {
     const [treeData, setTreeData] = useState<RawNodeDatum>({
@@ -43,15 +43,17 @@ const TreePage: React.FC = () => {
 
     const buildExpressionTree = (expression: string) => {
         const terms = expression.split(" ");
-        const stack: Array<CalcTreeNode> = [];
+        const stack: Array<MyTreeNode> = [];
         terms.forEach((t) => {
             // if this term is an operand
             if (!operators.has(t)) {
+                // just push it into the stack
                 stack.push({
                     val: t,
                     isOperator: false,
                     left: undefined,
                     right: undefined,
+                    rendered: undefined,
                 });
             } else {
                 // this term is an operator
@@ -68,15 +70,54 @@ const TreePage: React.FC = () => {
                     isOperator: true,
                     left: left,
                     right: right,
+                    rendered: undefined,
                 });
             }
         });
-        console.log(stack);
+
+        // stack[0] will be the root node, return it
+        if (stack.length != 1) {
+            console.error("Bad Expression!");
+        }
+        return stack[0];
+    };
+
+    const dfs = (
+        dataRoot: MyTreeNode | undefined
+    ): RawNodeDatum | undefined => {
+        let r: RawNodeDatum | undefined = undefined;
+        if (dataRoot) {
+            const left = dfs(dataRoot.left);
+            const right = dfs(dataRoot.right);
+            const children: RawNodeDatum[] = [];
+            if (left !== undefined) {
+                children.push(left);
+            }
+            if (right !== undefined) {
+                children.push(right);
+            }
+
+            r = {
+                name: dataRoot.val,
+                children: children,
+            };
+
+            dataRoot.rendered = r; // make a reference back to this rendered node
+        }
+        return r;
+    };
+    const renderTreeWithRoot = (root: MyTreeNode) => {
+        const rawRoot = dfs(root);
+        if (rawRoot === undefined) {
+            console.error("Empty tree!");
+        } else {
+            setTreeData(rawRoot);
+        }
     };
 
     const expression = "4 7 11 * +";
     useEffect(() => {
-        buildExpressionTree(expression);
+        renderTreeWithRoot(buildExpressionTree(expression));
     }, []);
 
     const nodeRenderer: RenderCustomNodeElementFn = (
