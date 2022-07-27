@@ -1,19 +1,30 @@
 import classNames from "classnames";
 import { SyntheticEvent, useEffect, useState } from "react";
-import { CustomNodeElementProps } from "react-d3-tree/lib/types/common";
+import {
+    CustomNodeElementProps,
+    RawNodeDatum,
+    TreeNodeDatum,
+} from "react-d3-tree/lib/types/common";
 
 interface Props {
     nodeProps: CustomNodeElementProps;
-    highlight: boolean;
+    onClickHandler: (nodeDatum: TreeNodeDatum) => void;
 }
 
-const TreeNode: React.FC<Props> = ({ nodeProps, highlight }) => {
+const TreeNode: React.FC<Props> = (props) => {
     return (
-        <g>
+        <g onClick={() => props.onClickHandler(props.nodeProps.nodeDatum)}>
             <circle
                 className={classNames({
-                    "fill-white": !highlight,
-                    "fill-green-400": highlight,
+                    "fill-white":
+                        props.nodeProps.nodeDatum.attributes?.highlight ===
+                        "white",
+                    "fill-gray-500":
+                        props.nodeProps.nodeDatum.attributes?.highlight ===
+                        "gray",
+                    "fill-green-400":
+                        props.nodeProps.nodeDatum.attributes?.highlight ===
+                        "green",
                 })}
                 r="20"
             />
@@ -23,7 +34,7 @@ const TreeNode: React.FC<Props> = ({ nodeProps, highlight }) => {
                 dy=".3em"
                 className="text-lg fill-black"
             >
-                {nodeProps.nodeDatum.name}
+                {props.nodeProps.nodeDatum.name}
             </text>
         </g>
     );

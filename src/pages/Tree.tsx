@@ -8,35 +8,13 @@ import {
     CustomNodeElementProps,
     RawNodeDatum,
     RenderCustomNodeElementFn,
+    TreeNodeDatum,
 } from "react-d3-tree/lib/types/common";
 import { MyTreeNode } from "src/types";
 
 const TreePage: React.FC = () => {
     const [treeData, setTreeData] = useState<RawNodeDatum>({
-        name: "1",
-        children: [
-            {
-                name: "2",
-                children: [
-                    {
-                        name: "3",
-                        children: [
-                            {
-                                name: "7",
-                            },
-                        ],
-                    },
-                    {
-                        name: "3",
-                        children: [
-                            {
-                                name: "4",
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
+        name: "Loading...",
     });
 
     const operators = new Set(["+", "-", "*", "/", "^"]);
@@ -45,6 +23,8 @@ const TreePage: React.FC = () => {
         const terms = expression.split(" ");
         const stack: Array<MyTreeNode> = [];
         terms.forEach((t) => {
+            // generate a uuid for this node for search later
+            // const uuid = uuidv4();
             // if this term is an operand
             if (!operators.has(t)) {
                 // just push it into the stack
@@ -53,7 +33,7 @@ const TreePage: React.FC = () => {
                     isOperator: false,
                     left: undefined,
                     right: undefined,
-                    rendered: undefined,
+                    raw: undefined,
                 });
             } else {
                 // this term is an operator
@@ -70,7 +50,7 @@ const TreePage: React.FC = () => {
                     isOperator: true,
                     left: left,
                     right: right,
-                    rendered: undefined,
+                    raw: undefined,
                 });
             }
         });
@@ -100,9 +80,12 @@ const TreePage: React.FC = () => {
             r = {
                 name: dataRoot.val,
                 children: children,
+                attributes: {
+                    highlight: dataRoot.raw?.attributes?.highlight ?? "white",
+                },
             };
 
-            dataRoot.rendered = r; // make a reference back to this rendered node
+            dataRoot.raw = r; // make a reference back to this raw node
         }
         return r;
     };
@@ -116,13 +99,45 @@ const TreePage: React.FC = () => {
     };
 
     const expression = "4 7 11 * +";
+    let myRoot: MyTreeNode;
     useEffect(() => {
-        renderTreeWithRoot(buildExpressionTree(expression));
+        myRoot = buildExpressionTree(expression);
+        renderTreeWithRoot(myRoot);
+
+        inorder(myRoot);
     }, []);
+
+    const onNodeClick = (nodeDatum: TreeNodeDatum) => {
+        console.log("ID clicked: " + nodeDatum.__rd3t.id);
+    };
 
     const nodeRenderer: RenderCustomNodeElementFn = (
         nodeProps: CustomNodeElementProps
-    ) => <TreeNode nodeProps={nodeProps} highlight={true} />;
+    ) => {
+        const nodeID = nodeProps.nodeDatum.__rd3t.id;
+        return <TreeNode nodeProps={nodeProps} onClickHandler={onNodeClick} />;
+    };
+
+    function wait(milliseconds: number) {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds));
+    }
+
+    const inorder = async (root: MyTreeNode) => {
+        if (root === undefined || root.raw?.attributes === undefined) {
+            return;
+        }
+        root.raw.attributes.highlight = "green";
+        renderTreeWithRoot(myRoot);
+        await wait(1 * 1000);
+        console.log(myRoot);
+        root.raw.attributes.highlight = "gray";
+        if (root.left) {
+            await inorder(root.left);
+        }
+        if (root.right) {
+            await inorder(root.right);
+        }
+    };
 
     return (
         <Layout title="Tree - Notation Visualizer">

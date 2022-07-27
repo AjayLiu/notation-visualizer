@@ -10,5 +10,5 @@ export interface MyTreeNode {
     isOperator: boolean;
     left: MyTreeNode | undefined;
     right: MyTreeNode | undefined;
-    rendered: RawNodeDatum | undefined;
+    raw: RawNodeDatum | undefined;
 }
