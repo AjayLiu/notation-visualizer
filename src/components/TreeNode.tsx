@@ -19,7 +19,7 @@ const TreeNode: React.FC<Props> = (props) => {
                     "fill-white":
                         props.nodeProps.nodeDatum.attributes?.highlight ===
                         "white",
-                    "fill-gray-500":
+                    "fill-gray-400":
                         props.nodeProps.nodeDatum.attributes?.highlight ===
                         "gray",
                     "fill-green-400":
@@ -35,6 +35,14 @@ const TreeNode: React.FC<Props> = (props) => {
                 className="text-lg fill-black"
             >
                 {props.nodeProps.nodeDatum.name}
+            </text>
+            <text
+                strokeWidth={1}
+                textAnchor="middle"
+                dy=".3em"
+                className="text-lg fill-black"
+            >
+                {props.nodeProps.nodeDatum.attributes.note}
             </text>
         </g>
     );

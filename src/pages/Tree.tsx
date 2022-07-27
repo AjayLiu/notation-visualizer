@@ -129,7 +129,6 @@ const TreePage: React.FC = () => {
         root.raw.attributes.highlight = "green";
         renderTreeWithRoot(myRoot);
         await wait(1 * 1000);
-        console.log(myRoot);
         root.raw.attributes.highlight = "gray";
         if (root.left) {
             await inorder(root.left);
@@ -137,13 +136,14 @@ const TreePage: React.FC = () => {
         if (root.right) {
             await inorder(root.right);
         }
+        renderTreeWithRoot(myRoot);
     };
 
     return (
         <Layout title="Tree - Notation Visualizer">
             <Text>Hi</Text>
             <NoSSRWrapper>
-                <div className={`m-auto bg-ajay-light w-[500px] h-[500px]`}>
+                <div className={`m-auto bg-gray-300 w-[500px] h-[500px]`}>
                     <Tree
                         data={treeData}
                         pathFunc="straight"
