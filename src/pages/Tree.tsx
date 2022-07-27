@@ -106,7 +106,7 @@ const TreePage: React.FC = () => {
         myRoot = buildExpressionTree(expression);
         renderTreeWithRoot(myRoot);
 
-        preorder(myRoot);
+        inorder(myRoot);
     }, []);
 
     const onNodeClick = (nodeDatum: TreeNodeDatum) => {
@@ -143,6 +143,22 @@ const TreePage: React.FC = () => {
         }
         if (root.right) {
             await preorder(root.right);
+        }
+    };
+    const inorder = async (root: MyTreeNode) => {
+        if (root === undefined || root.raw?.attributes === undefined) {
+            return;
+        }
+        if (root.left) {
+            await inorder(root.left);
+        }
+        resultRef.current.push(root.val);
+        root.raw.attributes.highlight = "green";
+        renderTreeWithRoot(myRoot);
+        await wait(1 * 1000);
+        root.raw.attributes.highlight = "gray";
+        if (root.right) {
+            await inorder(root.right);
         }
     };
 
