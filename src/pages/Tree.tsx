@@ -141,7 +141,6 @@ const TreePage: React.FC = () => {
 
     return (
         <Layout title="Tree - Notation Visualizer">
-            <Text>Hi</Text>
             <NoSSRWrapper>
                 <div className={`m-auto bg-gray-300 w-[500px] h-[500px]`}>
                     <Tree

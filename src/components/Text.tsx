@@ -6,7 +6,7 @@ interface Props {
 }
 
 const Text: React.FC<Props> = (props) => {
-    return <p className="text-white">{props.children}</p>;
+    return <div className="text-white">{props.children}</div>;
 };
 
 export default Text;

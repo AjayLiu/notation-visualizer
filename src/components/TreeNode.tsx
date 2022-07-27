@@ -36,14 +36,6 @@ const TreeNode: React.FC<Props> = (props) => {
             >
                 {props.nodeProps.nodeDatum.name}
             </text>
-            <text
-                strokeWidth={1}
-                textAnchor="middle"
-                dy=".3em"
-                className="text-lg fill-black"
-            >
-                {props.nodeProps.nodeDatum.attributes.note}
-            </text>
         </g>
     );
 };
