@@ -1,5 +1,6 @@
 import Layout from "@components/Layout";
 import NoSSRWrapper from "@components/NoSSRWrapper";
+import ResultList from "@components/ResultList";
 import Text from "@components/Text";
 import TreeNode from "@components/TreeNode";
 import { useEffect, useRef, useState } from "react";
@@ -98,13 +99,14 @@ const TreePage: React.FC = () => {
         }
     };
 
-    const expression = "4 7 11 * +";
+    const expression = "43 7 123 * +";
     let myRoot: MyTreeNode;
     useEffect(() => {
+        clearResults();
         myRoot = buildExpressionTree(expression);
         renderTreeWithRoot(myRoot);
 
-        inorder(myRoot);
+        postorder(myRoot);
     }, []);
 
     const onNodeClick = (nodeDatum: TreeNodeDatum) => {
@@ -122,40 +124,80 @@ const TreePage: React.FC = () => {
         return new Promise((resolve) => setTimeout(resolve, milliseconds));
     }
 
-    const inorder = async (root: MyTreeNode) => {
+    const resultRef = useRef<string[]>([]);
+    const clearResults = () => {
+        resultRef.current = [];
+    };
+
+    const preorder = async (root: MyTreeNode) => {
         if (root === undefined || root.raw?.attributes === undefined) {
             return;
         }
+        resultRef.current.push(root.val);
         root.raw.attributes.highlight = "green";
         renderTreeWithRoot(myRoot);
         await wait(1 * 1000);
         root.raw.attributes.highlight = "gray";
         if (root.left) {
+            await preorder(root.left);
+        }
+        if (root.right) {
+            await preorder(root.right);
+        }
+    };
+    const inorder = async (root: MyTreeNode) => {
+        if (root === undefined || root.raw?.attributes === undefined) {
+            return;
+        }
+        if (root.left) {
             await inorder(root.left);
         }
+        resultRef.current.push(root.val);
+        root.raw.attributes.highlight = "green";
+        renderTreeWithRoot(myRoot);
+        await wait(1 * 1000);
+        root.raw.attributes.highlight = "gray";
         if (root.right) {
             await inorder(root.right);
         }
+    };
+    const postorder = async (root: MyTreeNode) => {
+        if (root === undefined || root.raw?.attributes === undefined) {
+            return;
+        }
+        if (root.left) {
+            await postorder(root.left);
+        }
+        if (root.right) {
+            await postorder(root.right);
+        }
+        resultRef.current.push(root.val);
+        root.raw.attributes.highlight = "green";
         renderTreeWithRoot(myRoot);
+        await wait(1 * 1000);
+        root.raw.attributes.highlight = "gray";
     };
 
     return (
         <Layout title="Tree - Notation Visualizer">
-            <NoSSRWrapper>
-                <div className={`m-auto bg-gray-300 w-[500px] h-[500px]`}>
-                    <Tree
-                        data={treeData}
-                        pathFunc="straight"
-                        zoomable
-                        orientation="vertical"
-                        collapsible={false}
-                        zoom={0.8}
-                        translate={{ x: 500 / 2, y: 20 }}
-                        renderCustomNodeElement={nodeRenderer}
-                        separation={{ nonSiblings: 1.5, siblings: 1.5 }}
-                    />
+            <div className="m-auto w-fit">
+                <div className={`bg-gray-300 w-vis h-vis `}>
+                    <NoSSRWrapper>
+                        <Tree
+                            data={treeData}
+                            pathFunc="straight"
+                            zoomable
+                            orientation="vertical"
+                            collapsible={false}
+                            zoom={0.8}
+                            translate={{ x: 500 / 2, y: 20 }}
+                            renderCustomNodeElement={nodeRenderer}
+                            separation={{ nonSiblings: 1.5, siblings: 1.5 }}
+                        />
+                    </NoSSRWrapper>
                 </div>
-            </NoSSRWrapper>
+                <ResultList result={resultRef.current} />
+            </div>
         </Layout>
     );
 };
