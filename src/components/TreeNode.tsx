@@ -22,6 +22,9 @@ const TreeNode: React.FC<Props> = (props) => {
                     "fill-gray-400":
                         props.nodeProps.nodeDatum.attributes?.highlight ===
                         "gray",
+                    "fill-green-200":
+                        props.nodeProps.nodeDatum.attributes?.highlight ===
+                        "light-green",
                     "fill-green-400":
                         props.nodeProps.nodeDatum.attributes?.highlight ===
                         "green",

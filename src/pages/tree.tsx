@@ -99,7 +99,7 @@ const TreePage: React.FC = () => {
         }
     };
 
-    const expression = "43 7 123 * +";
+    const expression = "43 7 123 * + 6 9 - /";
     let myRoot: MyTreeNode;
     useEffect(() => {
         clearResults();
@@ -129,6 +129,7 @@ const TreePage: React.FC = () => {
         resultRef.current = [];
     };
 
+    const waitTime = 1;
     const preorder = async (root: MyTreeNode) => {
         if (root === undefined || root.raw?.attributes === undefined) {
             return;
@@ -136,12 +137,18 @@ const TreePage: React.FC = () => {
         resultRef.current.push(root.val);
         root.raw.attributes.highlight = "green";
         renderTreeWithRoot(myRoot);
-        await wait(1 * 1000);
+        await wait(waitTime * 1000);
         root.raw.attributes.highlight = "gray";
-        if (root.left) {
+        if (root.left && root.left.raw?.attributes !== undefined) {
+            root.left.raw.attributes.highlight = "light-green";
+            renderTreeWithRoot(myRoot);
+            await wait(waitTime * 1000);
             await preorder(root.left);
         }
-        if (root.right) {
+        if (root.right && root.right.raw?.attributes !== undefined) {
+            root.right.raw.attributes.highlight = "light-green";
+            renderTreeWithRoot(myRoot);
+            await wait(waitTime * 1000);
             await preorder(root.right);
         }
     };
@@ -149,15 +156,18 @@ const TreePage: React.FC = () => {
         if (root === undefined || root.raw?.attributes === undefined) {
             return;
         }
-        if (root.left) {
+        root.raw.attributes.highlight = "light-green";
+        renderTreeWithRoot(myRoot);
+        await wait(waitTime * 1000);
+        if (root.left && root.left.raw?.attributes !== undefined) {
             await inorder(root.left);
         }
         resultRef.current.push(root.val);
         root.raw.attributes.highlight = "green";
         renderTreeWithRoot(myRoot);
-        await wait(1 * 1000);
+        await wait(waitTime * 1000);
         root.raw.attributes.highlight = "gray";
-        if (root.right) {
+        if (root.right && root.right.raw?.attributes !== undefined) {
             await inorder(root.right);
         }
     };
@@ -165,6 +175,9 @@ const TreePage: React.FC = () => {
         if (root === undefined || root.raw?.attributes === undefined) {
             return;
         }
+        root.raw.attributes.highlight = "light-green";
+        renderTreeWithRoot(myRoot);
+        await wait(waitTime * 1000);
         if (root.left) {
             await postorder(root.left);
         }
@@ -174,7 +187,7 @@ const TreePage: React.FC = () => {
         resultRef.current.push(root.val);
         root.raw.attributes.highlight = "green";
         renderTreeWithRoot(myRoot);
-        await wait(1 * 1000);
+        await wait(waitTime * 1000);
         root.raw.attributes.highlight = "gray";
     };
 
@@ -192,7 +205,7 @@ const TreePage: React.FC = () => {
                             zoom={0.8}
                             translate={{ x: 500 / 2, y: 20 }}
                             renderCustomNodeElement={nodeRenderer}
-                            separation={{ nonSiblings: 1.5, siblings: 1.5 }}
+                            separation={{ nonSiblings: 1, siblings: 1 }}
                         />
                     </NoSSRWrapper>
                 </div>
