@@ -14,6 +14,7 @@ import {
     TreeNodeDatum,
 } from "react-d3-tree/lib/types/common";
 import { MyTreeNode, TraversalParams } from "src/types";
+import Swal from "sweetalert2";
 
 const TreePage: React.FC = () => {
     const [treeData, setTreeData] = useState<RawNodeDatum>({
@@ -44,6 +45,12 @@ const TreePage: React.FC = () => {
                 // first to be popped is right, second is left child
                 if (stack.length <= 1) {
                     console.error("Bad expression!");
+                    Swal.fire({
+                        title: "Invalid Input Data!",
+                        text: "Check if your Tree Data is in valid Postorder notation and space-separated",
+                        icon: "error",
+                        confirmButtonText: "Okay",
+                    });
                 }
                 const right = stack.pop();
                 const left = stack.pop();
@@ -63,6 +70,13 @@ const TreePage: React.FC = () => {
         // stack[0] will be the root node, return it
         if (stack.length != 1) {
             console.error("Bad Expression!");
+
+            Swal.fire({
+                title: "Invalid Input Data!",
+                text: "Check if your Tree Data is in valid Postorder notation and space-separated",
+                icon: "error",
+                confirmButtonText: "Okay",
+            });
         }
         return stack[0];
     };
@@ -98,6 +112,12 @@ const TreePage: React.FC = () => {
         const rawRoot = dfs(root);
         if (rawRoot === undefined) {
             console.error("Empty tree!");
+            Swal.fire({
+                title: "Error!",
+                text: "Tree is empty! (probably a developer error)",
+                icon: "error",
+                confirmButtonText: "Okay",
+            });
         } else {
             setTreeData(rawRoot);
         }
