@@ -1,8 +1,10 @@
+import Button from "@components/Button";
 import Layout from "@components/Layout";
 import NoSSRWrapper from "@components/NoSSRWrapper";
 import ResultList from "@components/ResultList";
 import Text from "@components/Text";
 import TreeNode from "@components/TreeNode";
+import { resolve } from "path";
 import { useEffect, useRef, useState } from "react";
 import Tree from "react-d3-tree";
 import {
@@ -11,7 +13,7 @@ import {
     RenderCustomNodeElementFn,
     TreeNodeDatum,
 } from "react-d3-tree/lib/types/common";
-import { MyTreeNode } from "src/types";
+import { MyTreeNode, TraversalParams } from "src/types";
 
 const TreePage: React.FC = () => {
     const [treeData, setTreeData] = useState<RawNodeDatum>({
@@ -56,6 +58,8 @@ const TreePage: React.FC = () => {
             }
         });
 
+        simCount.current++;
+
         // stack[0] will be the root node, return it
         if (stack.length != 1) {
             console.error("Bad Expression!");
@@ -90,7 +94,7 @@ const TreePage: React.FC = () => {
         }
         return r;
     };
-    const renderTreeWithRoot = (root: MyTreeNode) => {
+    const renderTreeWithRoot = (root: MyTreeNode | undefined) => {
         const rawRoot = dfs(root);
         if (rawRoot === undefined) {
             console.error("Empty tree!");
@@ -99,14 +103,22 @@ const TreePage: React.FC = () => {
         }
     };
 
-    const expression = "43 7 123 * +";
-    let myRoot: MyTreeNode;
-    useEffect(() => {
+    const expression = "43 7 123 * + 6 9 - /";
+    const [myRoot, setMyRoot] = useState<MyTreeNode | undefined>(undefined);
+    const resetToExpression = () => {
         clearResults();
-        myRoot = buildExpressionTree(expression);
-        renderTreeWithRoot(myRoot);
+        const cleanRoot = buildExpressionTree(expression);
+        setMyRoot(cleanRoot);
+        if (myRoot === undefined) {
+            renderTreeWithRoot(cleanRoot);
+        } else {
+            renderTreeWithRoot(myRoot);
+        }
+    };
+    const simCount = useRef<number>(0);
 
-        postorder(myRoot);
+    useEffect(() => {
+        resetToExpression();
     }, []);
 
     const onNodeClick = (nodeDatum: TreeNodeDatum) => {
@@ -129,53 +141,89 @@ const TreePage: React.FC = () => {
         resultRef.current = [];
     };
 
-    const preorder = async (root: MyTreeNode) => {
-        if (root === undefined || root.raw?.attributes === undefined) {
+    const waitTime = 1;
+
+    const updateNodeWithColor = (
+        root: MyTreeNode,
+        color: "green" | "gray" | "light-green" | "white",
+        mySimCount: number
+    ) => {
+        if (root.raw?.attributes === undefined) return;
+        if (mySimCount !== simCount.current) return;
+        root.raw.attributes.highlight = color;
+        if (color != "gray") renderTreeWithRoot(myRoot);
+    };
+    const preorder = async ({ root, mySimCount }: TraversalParams) => {
+        if (
+            root === undefined ||
+            root.raw?.attributes === undefined ||
+            mySimCount !== simCount.current
+        ) {
             return;
         }
         resultRef.current.push(root.val);
-        root.raw.attributes.highlight = "green";
-        renderTreeWithRoot(myRoot);
-        await wait(1 * 1000);
-        root.raw.attributes.highlight = "gray";
+        updateNodeWithColor(root, "green", mySimCount);
+        await wait(waitTime * 1000);
+        updateNodeWithColor(root, "gray", mySimCount);
         if (root.left) {
-            await preorder(root.left);
+            updateNodeWithColor(root.left, "light-green", mySimCount);
+            await wait(waitTime * 1000);
+            await preorder({ root: root.left, mySimCount: mySimCount });
         }
         if (root.right) {
-            await preorder(root.right);
+            updateNodeWithColor(root.right, "light-green", mySimCount);
+            await wait(waitTime * 1000);
+            await preorder({ root: root.right, mySimCount: mySimCount });
         }
     };
-    const inorder = async (root: MyTreeNode) => {
-        if (root === undefined || root.raw?.attributes === undefined) {
+    const inorder = async ({ root, mySimCount }: TraversalParams) => {
+        if (
+            root === undefined ||
+            root.raw?.attributes === undefined ||
+            mySimCount != simCount.current
+        ) {
             return;
         }
-        if (root.left) {
-            await inorder(root.left);
+        updateNodeWithColor(root, "light-green", mySimCount);
+        await wait(waitTime * 1000);
+        if (root.left && root.left.raw?.attributes !== undefined) {
+            await inorder({ root: root.left, mySimCount: mySimCount });
         }
         resultRef.current.push(root.val);
-        root.raw.attributes.highlight = "green";
-        renderTreeWithRoot(myRoot);
-        await wait(1 * 1000);
-        root.raw.attributes.highlight = "gray";
-        if (root.right) {
-            await inorder(root.right);
+        updateNodeWithColor(root, "green", mySimCount);
+        await wait(waitTime * 1000);
+        updateNodeWithColor(root, "gray", mySimCount);
+        if (root.right && root.right.raw?.attributes !== undefined) {
+            await inorder({ root: root.right, mySimCount: mySimCount });
         }
     };
-    const postorder = async (root: MyTreeNode) => {
-        if (root === undefined || root.raw?.attributes === undefined) {
+    const postorder = async ({ root, mySimCount }: TraversalParams) => {
+        if (
+            root === undefined ||
+            root.raw?.attributes === undefined ||
+            mySimCount != simCount.current
+        ) {
             return;
         }
+        updateNodeWithColor(root, "light-green", mySimCount);
+        await wait(waitTime * 1000);
         if (root.left) {
-            await postorder(root.left);
+            await postorder({ root: root.left, mySimCount: mySimCount });
         }
         if (root.right) {
-            await postorder(root.right);
+            await postorder({ root: root.right, mySimCount: mySimCount });
         }
+        updateNodeWithColor(root, "green", mySimCount);
         resultRef.current.push(root.val);
-        root.raw.attributes.highlight = "green";
-        renderTreeWithRoot(myRoot);
-        await wait(1 * 1000);
-        root.raw.attributes.highlight = "gray";
+        await wait(waitTime * 1000);
+        updateNodeWithColor(root, "gray", mySimCount);
+    };
+
+    const onTraversalButtonClick = async (
+        func: (trav: TraversalParams) => Promise<void>
+    ) => {
+        resetToExpression();
+        func({ root: myRoot, mySimCount: simCount.current });
     };
 
     return (
@@ -192,11 +240,20 @@ const TreePage: React.FC = () => {
                             zoom={0.8}
                             translate={{ x: 500 / 2, y: 20 }}
                             renderCustomNodeElement={nodeRenderer}
-                            separation={{ nonSiblings: 1.5, siblings: 1.5 }}
+                            separation={{ nonSiblings: 1, siblings: 1 }}
                         />
                     </NoSSRWrapper>
                 </div>
                 <ResultList result={resultRef.current} />
+                <Button onClick={() => onTraversalButtonClick(preorder)}>
+                    Preorder
+                </Button>
+                <Button onClick={() => onTraversalButtonClick(inorder)}>
+                    Inorder
+                </Button>
+                <Button onClick={() => onTraversalButtonClick(postorder)}>
+                    Postorder
+                </Button>
             </div>
         </Layout>
     );
