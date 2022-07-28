@@ -1,4 +1,5 @@
 import Button from "@components/Button";
+import GenerateBar from "@components/GenerateBar";
 import Layout from "@components/Layout";
 import NoSSRWrapper from "@components/NoSSRWrapper";
 import ResultList from "@components/ResultList";
@@ -102,17 +103,13 @@ const TreePage: React.FC = () => {
         }
     };
 
-    const expression = "43 7 123 * + 6 9 - /";
-    const [myRoot, setMyRoot] = useState<MyTreeNode | undefined>(undefined);
+    const expression = useRef("43 7 123 * + 6 9 - /");
+    const myRoot = useRef<MyTreeNode | undefined>(undefined);
     const resetToExpression = () => {
         clearResults();
-        const cleanRoot = buildExpressionTree(expression);
-        setMyRoot(cleanRoot);
-        if (myRoot === undefined) {
-            renderTreeWithRoot(cleanRoot);
-        } else {
-            renderTreeWithRoot(myRoot);
-        }
+        const cleanRoot = buildExpressionTree(expression.current);
+        myRoot.current = cleanRoot;
+        renderTreeWithRoot(myRoot.current);
     };
     const simCount = useRef<number>(0);
 
@@ -150,7 +147,7 @@ const TreePage: React.FC = () => {
         if (root.raw?.attributes === undefined) return;
         if (mySimCount !== simCount.current) return;
         root.raw.attributes.highlight = color;
-        if (color != "gray") renderTreeWithRoot(myRoot);
+        if (color != "gray") renderTreeWithRoot(myRoot.current);
     };
     const preorder = async ({ root, mySimCount }: TraversalParams) => {
         if (
@@ -231,7 +228,7 @@ const TreePage: React.FC = () => {
         func: (trav: TraversalParams) => Promise<void>
     ) => {
         resetToExpression();
-        func({ root: myRoot, mySimCount: simCount.current });
+        func({ root: myRoot.current, mySimCount: simCount.current });
     };
 
     return (
@@ -239,10 +236,12 @@ const TreePage: React.FC = () => {
             <div className="m-auto w-[350px] px-3 border border-ajay-dark rounded-xl bg-ajay-light">
                 <div className="m-auto w-vis mt-3">
                     <div className="text-center text-lg">
-                        Interactive Tree Visualizer
+                        Expression Tree Visualizer
                     </div>
                     <div className="text-center text-xs">
-                        <em>feel free to move / zoom in on the tree!</em>
+                        <em>
+                            it's interactive! (scroll to zoom / drag to pan)!
+                        </em>
                     </div>
                     <div className={`bg-gray-300 w-vis h-vis mt-3`}>
                         <NoSSRWrapper>
@@ -261,6 +260,15 @@ const TreePage: React.FC = () => {
                     </div>
                     <ResultList result={resultRef.current} />
                     <div className="flex justify-center my-3">
+                        <GenerateBar
+                            onSubmit={(newVal) => {
+                                expression.current = newVal;
+                                resetToExpression();
+                            }}
+                        />
+                    </div>
+                    <div className="text-center">Run Visualizer:</div>
+                    <div className="flex justify-center my-2">
                         <Button
                             onClick={() => onTraversalButtonClick(preorder)}
                         >

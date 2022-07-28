@@ -19,6 +19,9 @@ module.exports = {
                 sm: "24rem",
                 vis: "300px",
             },
+            fontSize: {
+                xxs: ".5rem",
+            },
         },
     },
     plugins: [],
