@@ -3,19 +3,18 @@ import React from "react";
 import { REPO_LINK } from "src/shared";
 import ExternalLink from "./ExternalLink";
 import SocialIcon from "./SocialIcon";
-import Text from "./Text";
 const Footer: React.FC = () => {
     const imgPath = "https://ajayliu.com/img";
     return (
         <footer className="bg-ajay-dark flex flex-col-reverse items-center w-full m-auto py-5 mt-48 text-center">
-            <Text>
+            <div>
                 © {new Date().getFullYear()}{" "}
                 <ExternalLink href="https://ajayliu.com">Ajay Liu</ExternalLink>
                 . All Rights Reserved •{" "}
                 <ExternalLink href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@ajayliu.com">
                     contact@ajayliu.com
                 </ExternalLink>
-            </Text>
+            </div>
             <div className="m-6 flex justify-evenly">
                 <SocialIcon
                     href="https://ajayliu.com"
@@ -54,7 +53,7 @@ const Footer: React.FC = () => {
                             width={60}
                             height={60}
                         />
-                        <Text>Contribute to this project on Github</Text>
+                        <div>Contribute to this project on Github</div>
                     </div>
                 </ExternalLink>
             </div>

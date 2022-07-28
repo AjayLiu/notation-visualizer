@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ImageData } from "src/types";
 import InternalLink from "./InternalLink";
 import Navbar from "./Navbar";
-import Text from "./Text";
 
 const Header: React.FC = () => {
     return (
@@ -20,7 +19,7 @@ const Header: React.FC = () => {
                             />
                         </div>
                         <h1 className="text-2xl text-center">
-                            <Text>Notation Visualizer</Text>
+                            Notation Visualizer
                         </h1>
                     </div>
                 </InternalLink>

@@ -3,9 +3,7 @@ import Layout from "@components/Layout";
 import NoSSRWrapper from "@components/NoSSRWrapper";
 import ResultList from "@components/ResultList";
 import Slider from "@components/Slider";
-import Text from "@components/Text";
 import TreeNode from "@components/TreeNode";
-import { resolve } from "path";
 import { useEffect, useRef, useState } from "react";
 import Tree from "react-d3-tree";
 import {
