@@ -12,3 +12,8 @@ export interface MyTreeNode {
     right: MyTreeNode | undefined;
     raw: RawNodeDatum | undefined;
 }
+
+export interface TraversalParams {
+    root: MyTreeNode | undefined;
+    mySimCount: number;
+}

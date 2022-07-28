@@ -8,13 +8,13 @@ interface Props {
 const ResultList: React.FC<Props> = (props) => {
     return (
         <Text>
-            <div className="flex w-vis h-16 border text-lg items-center">
+            <div className="flex w-vis h-16 border items-center">
                 <div className="ml-3 mr-1">Result: [</div>
                 <output className="flex">
                     {props.result.map((val, idx) => {
                         const isLast = idx === props.result.length - 1;
                         return (
-                            <div className="flex">
+                            <div className="flex" key={idx}>
                                 <div
                                     className={classNames(
                                         "h-7 w-8 min-w-min text-center",
