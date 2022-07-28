@@ -17,7 +17,7 @@ module.exports = {
             },
             spacing: {
                 sm: "24rem",
-                vis: "500px",
+                vis: "300px",
             },
         },
     },

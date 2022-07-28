@@ -2,6 +2,7 @@ import Button from "@components/Button";
 import Layout from "@components/Layout";
 import NoSSRWrapper from "@components/NoSSRWrapper";
 import ResultList from "@components/ResultList";
+import Slider from "@components/Slider";
 import Text from "@components/Text";
 import TreeNode from "@components/TreeNode";
 import { resolve } from "path";
@@ -141,7 +142,7 @@ const TreePage: React.FC = () => {
         resultRef.current = [];
     };
 
-    const waitTime = 1;
+    const waitTime = useRef(0.5);
 
     const updateNodeWithColor = (
         root: MyTreeNode,
@@ -163,17 +164,17 @@ const TreePage: React.FC = () => {
         }
         resultRef.current.push(root.val);
         updateNodeWithColor(root, "green", mySimCount);
-        await wait(waitTime * 1000);
+        await wait(waitTime.current * 1000);
         if (mySimCount !== simCount.current) return;
         updateNodeWithColor(root, "gray", mySimCount);
         if (root.left) {
             updateNodeWithColor(root.left, "light-green", mySimCount);
-            await wait(waitTime * 1000);
+            await wait(waitTime.current * 1000);
             await preorder({ root: root.left, mySimCount: mySimCount });
         }
         if (root.right) {
             updateNodeWithColor(root.right, "light-green", mySimCount);
-            await wait(waitTime * 1000);
+            await wait(waitTime.current * 1000);
             await preorder({ root: root.right, mySimCount: mySimCount });
         }
     };
@@ -186,7 +187,7 @@ const TreePage: React.FC = () => {
             return;
         }
         updateNodeWithColor(root, "light-green", mySimCount);
-        await wait(waitTime * 1000);
+        await wait(waitTime.current * 1000);
         if (mySimCount !== simCount.current) return;
         if (root.left && root.left.raw?.attributes !== undefined) {
             await inorder({ root: root.left, mySimCount: mySimCount });
@@ -194,7 +195,7 @@ const TreePage: React.FC = () => {
         }
         resultRef.current.push(root.val);
         updateNodeWithColor(root, "green", mySimCount);
-        await wait(waitTime * 1000);
+        await wait(waitTime.current * 1000);
         if (mySimCount !== simCount.current) return;
         updateNodeWithColor(root, "gray", mySimCount);
         if (root.right && root.right.raw?.attributes !== undefined) {
@@ -211,7 +212,7 @@ const TreePage: React.FC = () => {
             return;
         }
         updateNodeWithColor(root, "light-green", mySimCount);
-        await wait(waitTime * 1000);
+        await wait(waitTime.current * 1000);
         if (mySimCount !== simCount.current) return;
         if (root.left) {
             await postorder({ root: root.left, mySimCount: mySimCount });
@@ -223,7 +224,7 @@ const TreePage: React.FC = () => {
         }
         updateNodeWithColor(root, "green", mySimCount);
         resultRef.current.push(root.val);
-        await wait(waitTime * 1000);
+        await wait(waitTime.current * 1000);
         if (mySimCount !== simCount.current) return;
         updateNodeWithColor(root, "gray", mySimCount);
     };
@@ -237,32 +238,53 @@ const TreePage: React.FC = () => {
 
     return (
         <Layout title="Tree - Notation Visualizer">
-            <div className="m-auto w-fit">
-                <div className={`bg-gray-300 w-vis h-vis `}>
-                    <NoSSRWrapper>
-                        <Tree
-                            data={treeData}
-                            pathFunc="straight"
-                            zoomable
-                            orientation="vertical"
-                            collapsible={false}
-                            zoom={0.8}
-                            translate={{ x: 500 / 2, y: 20 }}
-                            renderCustomNodeElement={nodeRenderer}
-                            separation={{ nonSiblings: 1, siblings: 1 }}
+            <div className="m-auto w-[350px] px-3 border border-ajay-dark rounded-xl bg-ajay-light">
+                <div className="m-auto w-vis mt-3">
+                    <div className="text-center text-lg">
+                        Interactive Tree Visualizer
+                    </div>
+                    <div className="text-center text-xs">
+                        <em>feel free to move / zoom in on the tree!</em>
+                    </div>
+                    <div className={`bg-gray-300 w-vis h-vis mt-3`}>
+                        <NoSSRWrapper>
+                            <Tree
+                                data={treeData}
+                                pathFunc="straight"
+                                zoomable
+                                orientation="vertical"
+                                collapsible={false}
+                                zoom={0.6}
+                                translate={{ x: 300 / 2, y: 20 }}
+                                renderCustomNodeElement={nodeRenderer}
+                                separation={{ nonSiblings: 1, siblings: 1 }}
+                            />
+                        </NoSSRWrapper>
+                    </div>
+                    <ResultList result={resultRef.current} />
+                    <div className="flex justify-center my-3">
+                        <Button
+                            onClick={() => onTraversalButtonClick(preorder)}
+                        >
+                            Preorder
+                        </Button>
+                        <Button onClick={() => onTraversalButtonClick(inorder)}>
+                            Inorder
+                        </Button>
+                        <Button
+                            onClick={() => onTraversalButtonClick(postorder)}
+                        >
+                            Postorder
+                        </Button>
+                    </div>
+                    <div className="flex justify-center mb-6">
+                        <Slider
+                            onChange={(speed) => {
+                                waitTime.current = 0.25 / speed;
+                            }}
                         />
-                    </NoSSRWrapper>
+                    </div>
                 </div>
-                <ResultList result={resultRef.current} />
-                <Button onClick={() => onTraversalButtonClick(preorder)}>
-                    Preorder
-                </Button>
-                <Button onClick={() => onTraversalButtonClick(inorder)}>
-                    Inorder
-                </Button>
-                <Button onClick={() => onTraversalButtonClick(postorder)}>
-                    Postorder
-                </Button>
             </div>
         </Layout>
     );
