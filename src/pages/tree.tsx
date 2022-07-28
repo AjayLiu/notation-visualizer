@@ -164,6 +164,7 @@ const TreePage: React.FC = () => {
         resultRef.current.push(root.val);
         updateNodeWithColor(root, "green", mySimCount);
         await wait(waitTime * 1000);
+        if (mySimCount !== simCount.current) return;
         updateNodeWithColor(root, "gray", mySimCount);
         if (root.left) {
             updateNodeWithColor(root.left, "light-green", mySimCount);
@@ -186,15 +187,19 @@ const TreePage: React.FC = () => {
         }
         updateNodeWithColor(root, "light-green", mySimCount);
         await wait(waitTime * 1000);
+        if (mySimCount !== simCount.current) return;
         if (root.left && root.left.raw?.attributes !== undefined) {
             await inorder({ root: root.left, mySimCount: mySimCount });
+            if (mySimCount !== simCount.current) return;
         }
         resultRef.current.push(root.val);
         updateNodeWithColor(root, "green", mySimCount);
         await wait(waitTime * 1000);
+        if (mySimCount !== simCount.current) return;
         updateNodeWithColor(root, "gray", mySimCount);
         if (root.right && root.right.raw?.attributes !== undefined) {
             await inorder({ root: root.right, mySimCount: mySimCount });
+            if (mySimCount !== simCount.current) return;
         }
     };
     const postorder = async ({ root, mySimCount }: TraversalParams) => {
@@ -207,15 +212,19 @@ const TreePage: React.FC = () => {
         }
         updateNodeWithColor(root, "light-green", mySimCount);
         await wait(waitTime * 1000);
+        if (mySimCount !== simCount.current) return;
         if (root.left) {
             await postorder({ root: root.left, mySimCount: mySimCount });
+            if (mySimCount !== simCount.current) return;
         }
         if (root.right) {
             await postorder({ root: root.right, mySimCount: mySimCount });
+            if (mySimCount !== simCount.current) return;
         }
         updateNodeWithColor(root, "green", mySimCount);
         resultRef.current.push(root.val);
         await wait(waitTime * 1000);
+        if (mySimCount !== simCount.current) return;
         updateNodeWithColor(root, "gray", mySimCount);
     };
 
