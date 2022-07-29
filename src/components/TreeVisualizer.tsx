@@ -15,7 +15,10 @@ import {
 import { MyTreeNode, TraversalParams } from "src/types";
 import Swal from "sweetalert2";
 
-const TreeVisualizer: React.FC = () => {
+interface Props {
+    initialExpression: string;
+}
+const TreeVisualizer: React.FC<Props> = (props) => {
     const [treeData, setTreeData] = useState<RawNodeDatum>({
         name: "Loading...",
     });
@@ -69,7 +72,6 @@ const TreeVisualizer: React.FC = () => {
         // stack[0] will be the root node, return it
         if (stack.length != 1) {
             console.error("Bad Expression!");
-
             Swal.fire({
                 title: "Invalid Input Data!",
                 text: "Check if your Tree Data is in valid Postorder notation and space-separated",
@@ -122,7 +124,7 @@ const TreeVisualizer: React.FC = () => {
         }
     };
 
-    const expression = useRef("43 7 123 * + 6 9 - /");
+    const expression = useRef(props.initialExpression);
     const myRoot = useRef<MyTreeNode | undefined>(undefined);
     const resetToExpression = () => {
         clearResults();
