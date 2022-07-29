@@ -13,7 +13,7 @@ const Slider: React.FC<Props> = (props) => {
     };
     return (
         <div className="flex">
-            <label htmlFor="Speed" className="mr-2">
+            <label htmlFor="Speed" className="mr-2 text-sm">
                 Simulation Speed
             </label>
             <input

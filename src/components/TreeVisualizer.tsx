@@ -253,7 +253,7 @@ const TreeVisualizer: React.FC<Props> = (props) => {
     };
 
     return (
-        <div className="m-auto w-[350px] px-3 border border-ajay-dark rounded-xl bg-ajay-light">
+        <div className="m-auto w-[350px] px-3 border border-ajay-dark rounded-xl bg-ajay-blue">
             <div className="m-auto w-vis mt-3">
                 <div className="text-center text-lg">
                     Expression Tree Visualizer
@@ -269,8 +269,8 @@ const TreeVisualizer: React.FC<Props> = (props) => {
                             zoomable
                             orientation="vertical"
                             collapsible={false}
-                            zoom={0.6}
-                            translate={{ x: 300 / 2, y: 20 }}
+                            zoom={0.5}
+                            translate={{ x: 250 / 2, y: 20 }}
                             renderCustomNodeElement={nodeRenderer}
                             separation={{ nonSiblings: 1, siblings: 1 }}
                         />
@@ -286,7 +286,7 @@ const TreeVisualizer: React.FC<Props> = (props) => {
                     />
                 </div>
                 <div className="text-center">Run Visualizer:</div>
-                <div className="flex justify-center my-2">
+                <div className="flex justify-center m-2">
                     <Button onClick={() => onTraversalButtonClick(preorder)}>
                         Preorder
                     </Button>

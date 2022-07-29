@@ -9,7 +9,7 @@ module.exports = {
             colors: {
                 ajay: {
                     DEFAULT: "#252934",
-                    light: "#383849",
+                    blue: "#23395d",
                     gray: "#303235",
                     "light-gray": "#777d8c",
                     dark: "#23262f",
@@ -17,7 +17,7 @@ module.exports = {
             },
             spacing: {
                 sm: "24rem",
-                vis: "300px",
+                vis: "250px",
             },
             fontSize: {
                 xxs: ".5rem",

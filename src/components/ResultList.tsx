@@ -6,9 +6,10 @@ interface Props {
 
 const ResultList: React.FC<Props> = (props) => {
     return (
-        <div className="flex w-vis h-12 border items-center text-sm ">
-            <div className="ml-3 mr-1">Result: [</div>
-            <output className="flex">
+        <div className="flex w-vis min-h-fit py-2 border items-center text-sm ">
+            <div className="ml-3 mr-1">Result:</div>
+            <output className="flex w-full flex-wrap ">
+                [
                 {props.result.map((val, idx) => {
                     const isLast = idx === props.result.length - 1;
                     return (
@@ -27,8 +28,8 @@ const ResultList: React.FC<Props> = (props) => {
                         </div>
                     );
                 })}
+                ]
             </output>
-            <div className="ml-1">]</div>
         </div>
     );
 };
