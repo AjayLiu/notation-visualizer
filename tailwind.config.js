@@ -18,6 +18,7 @@ module.exports = {
             spacing: {
                 sm: "24rem",
                 vis: "250px",
+                "vis-container": "310px",
             },
             fontSize: {
                 xxs: ".5rem",

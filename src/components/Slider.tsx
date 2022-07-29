@@ -12,11 +12,12 @@ const Slider: React.FC<Props> = (props) => {
         props.onChange(newValue);
     };
     return (
-        <div className="flex">
-            <label htmlFor="Speed" className="mr-2 text-sm">
+        <div className="flex w-full">
+            <label htmlFor="Speed" className="mr-2 text-sm shrink-0">
                 Simulation Speed
             </label>
             <input
+                className="w-full shrink"
                 type="range"
                 min="0.1"
                 max="1"
