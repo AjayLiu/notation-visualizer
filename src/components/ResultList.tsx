@@ -6,7 +6,7 @@ interface Props {
 
 const ResultList: React.FC<Props> = (props) => {
     return (
-        <div className="flex w-vis min-h-fit py-2 border items-center text-sm ">
+        <div className="flex min-h-fit py-2 border items-center text-sm ">
             <div className="ml-3 mr-1">Result:</div>
             <output className="flex w-full flex-wrap ">
                 [

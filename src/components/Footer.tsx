@@ -6,7 +6,7 @@ import SocialIcon from "./SocialIcon";
 const Footer: React.FC = () => {
     const imgPath = "https://ajayliu.com/img";
     return (
-        <footer className="bg-ajay-dark flex flex-col-reverse items-center w-full m-auto py-5 mt-48 text-center">
+        <footer className="bg-ajay-dark flex flex-col-reverse items-center m-auto py-5 mt-48 text-center">
             <div>
                 © {new Date().getFullYear()}{" "}
                 <ExternalLink href="https://ajayliu.com">Ajay Liu</ExternalLink>
@@ -45,9 +45,9 @@ const Footer: React.FC = () => {
                     }}
                 />
             </div>
-            <div>
+            <div className="w-full">
                 <ExternalLink href={REPO_LINK}>
-                    <div className="flex items-center justify-evenly w-80">
+                    <div className="flex items-center justify-center">
                         <Image
                             src={`${imgPath}/repo.svg`}
                             width={60}

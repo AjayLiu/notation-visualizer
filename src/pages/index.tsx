@@ -1,5 +1,6 @@
 import Layout from "@components/Layout";
 import ParagraphHeader from "@components/ParagraphHeader";
+import StackVisualizer from "@components/StackVisualizer";
 import TextPanel from "@components/TextPanel";
 import TreeVisualizer from "@components/TreeVisualizer";
 import Image from "next/image";
@@ -82,6 +83,7 @@ const Home: React.FC = () => {
                 </div>
             </div>
             <TreeVisualizer initialExpression="8 2 3 * - 7 +" />
+            <StackVisualizer initialExpression="8 2 3 * - 7 +" />
         </Layout>
     );
 };

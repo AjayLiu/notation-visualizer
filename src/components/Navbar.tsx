@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
                 </li>
                 <li>|</li>
                 <li>
-                    <InternalLink href={"/"}>
+                    <InternalLink href={"/stack"}>
                         <div>Stack</div>
                     </InternalLink>
                 </li>
