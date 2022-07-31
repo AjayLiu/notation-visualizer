@@ -16,6 +16,7 @@ import { MyTreeNode, TraversalParams } from "src/types";
 import Swal from "sweetalert2";
 import ParagraphHeader from "./ParagraphHeader";
 import TextPanel from "./TextPanel";
+import { operators, wait } from "../shared/index";
 
 interface Props {
     initialExpression: string;
@@ -24,8 +25,6 @@ const TreeVisualizer: React.FC<Props> = (props) => {
     const [treeData, setTreeData] = useState<RawNodeDatum>({
         name: "Loading...",
     });
-
-    const operators = new Set(["+", "-", "*", "/", "^"]);
 
     const buildExpressionTree = (expression: string) => {
         const terms = expression.split(" ");
@@ -150,10 +149,6 @@ const TreeVisualizer: React.FC<Props> = (props) => {
         const nodeID = nodeProps.nodeDatum.__rd3t.id;
         return <TreeNode nodeProps={nodeProps} onClickHandler={onNodeClick} />;
     };
-
-    function wait(milliseconds: number) {
-        return new Promise((resolve) => setTimeout(resolve, milliseconds));
-    }
 
     const resultRef = useRef<string[]>([]);
     const clearResults = () => {

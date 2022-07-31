@@ -1,20 +1,80 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CodeBlock, CopyBlock, monokai } from "react-code-blocks";
+import { StackItem } from "src/types";
 import Button from "./Button";
 import GenerateBar from "./GenerateBar";
 import ParagraphHeader from "./ParagraphHeader";
 import Slider from "./Slider";
 import TextPanel from "./TextPanel";
+import VerticalList from "./VerticalList";
+import { operators, wait } from "../shared/index";
+import Swal from "sweetalert2";
+import { flushSync } from "react-dom";
 
 interface Props {
     initialExpression: string;
 }
 
 const StackVisualizer: React.FC<Props> = (props) => {
-    const waitTime = useRef(0.5);
+    const waitTime = useRef(0.2);
     const expression = useRef(props.initialExpression);
+    const isRunning = useRef(false);
+    const [inputList, setInputList] = useState<StackItem[] | undefined>();
+    const inputRef = useRef<StackItem[] | undefined>([]);
 
-    const resetToExpression = () => {};
+    const [stackList, setStackList] = useState<StackItem[] | undefined>();
+    const stackRef = useRef<StackItem[] | undefined>([]);
+
+    const [postfixHighlight, setPostfixHighlight] = useState("");
+    const [prefixHighlight, setPrefixHighlight] = useState("");
+
+    const simCount = useRef(0);
+
+    const rawExpressionToStackList = (expr: string) => {
+        const exploded = expr.split(" ");
+        const ans: StackItem[] = [];
+        exploded.forEach((val) => {
+            // validate that val is a number or operator
+            if (!operators.has(val) && isNaN(+val)) {
+                console.error("INVALID INPUT");
+                Swal.fire({
+                    title: "Invalid Input Data!",
+                    text: "Check if your Tree Data is in valid Postorder notation and space-separated",
+                    icon: "error",
+                    confirmButtonText: "Okay",
+                });
+                return;
+            }
+            const item: StackItem = {
+                val: val,
+                highlight: false,
+            };
+            ans.push(item);
+        });
+        return ans;
+    };
+
+    const inputListLoaded = useRef(false);
+    const triggerPostfix = useRef(false);
+
+    const resetToExpression = () => {
+        triggerPostfix.current = false;
+        simCount.current++;
+        setInputList(() => {
+            inputListLoaded.current = true;
+            return rawExpressionToStackList(expression.current);
+        });
+        setPostfixHighlight("");
+        setStackList(undefined);
+    };
+
+    useEffect(() => {
+        if (inputListLoaded && triggerPostfix.current) {
+            evaluatePostfix();
+            inputListLoaded.current = false;
+            triggerPostfix.current = false;
+        }
+    }, [inputList]);
 
     useEffect(() => {
         resetToExpression();
@@ -43,6 +103,226 @@ stack should only have one item: answer`;
 		push result of operation to stack
 }
 stack should only have one item: answer`;
+
+    const evaluatePostfix = async () => {
+        if (inputList === undefined || inputList.length === 0) return false; // inputList hasnt been loaded in yet
+        isRunning.current = true;
+        inputRef.current = inputList;
+
+        const ogSimCount = simCount.current;
+
+        let hasError = false;
+        while (inputRef.current.length > 0) {
+            // highlight top input token
+            let top: StackItem | undefined;
+            setPostfixHighlight("1");
+            setInputList((oldList) => {
+                const temp = oldList?.at(0);
+                if (temp !== undefined) {
+                    temp.highlight = true;
+                    top = temp;
+                }
+                inputRef.current = oldList;
+                return oldList;
+            });
+
+            await wait(waitTime.current * 1000);
+            if (ogSimCount !== simCount.current) break;
+
+            if (top === undefined) {
+                console.error("INPUT EMPTY");
+                hasError = true;
+                break;
+            }
+
+            // check if token is operator
+            if (operators.has(top.val)) {
+                setPostfixHighlight("4");
+                await wait(waitTime.current * 1000);
+                if (ogSimCount !== simCount.current) break;
+
+                // remove the token (operator) from input
+                let popped: StackItem | undefined;
+                setInputList((oldList) => {
+                    const temp = oldList?.shift();
+                    if (temp !== undefined) {
+                        popped = temp;
+                    }
+                    inputRef.current = oldList;
+                    return oldList;
+                });
+
+                // highlight the top 2 from stack
+                setPostfixHighlight("5-7");
+                setStackList((oldList) => {
+                    if (oldList === undefined) return oldList;
+                    oldList[0] = { ...oldList[0], highlight: true };
+                    oldList[1] = { ...oldList[1], highlight: true };
+                    stackRef.current = oldList;
+                    return oldList;
+                });
+
+                await wait(waitTime.current * 1000);
+                if (ogSimCount !== simCount.current) break;
+
+                // pop one from stack (right operand)
+                let rightOperand: StackItem | undefined;
+                setStackList((oldList) => {
+                    const temp = oldList?.shift();
+                    if (temp !== undefined && !isNaN(+temp.val)) {
+                        rightOperand = temp;
+                    } else {
+                        hasError = true;
+                        Swal.fire({
+                            title: "Invalid Input Data!",
+                            text: "An error occurred while popping from the stack, indicating the input data was invalid.",
+                            icon: "error",
+                            confirmButtonText: "Okay",
+                        });
+                        console.error(
+                            "Tried to pop operand from the stack but was empty or the operand was not a number, indicating input was faulty."
+                        );
+                    }
+                    stackRef.current = oldList;
+                    return oldList;
+                });
+
+                if (hasError) break;
+
+                // pop another from stack (left operand)
+                let leftOperand: StackItem | undefined;
+                setStackList((oldList) => {
+                    const temp = oldList?.shift();
+                    if (temp !== undefined && !isNaN(+temp.val)) {
+                        leftOperand = temp;
+                    } else {
+                        hasError = true;
+                        Swal.fire({
+                            title: "Invalid Input Data!",
+                            text: "An error occurred while popping from the stack, indicating the input data was invalid.",
+                            icon: "error",
+                            confirmButtonText: "Okay",
+                        });
+                        console.error(
+                            "Tried to pop operand from the stack but was empty or the operand was not a number, indicating input was faulty."
+                        );
+                    }
+                    stackRef.current = oldList;
+                    return oldList;
+                });
+
+                if (hasError) break;
+
+                await wait(waitTime.current * 1000);
+                if (ogSimCount !== simCount.current) break;
+                setPostfixHighlight("8-9");
+
+                // perform operation
+                let calcAns = 0;
+                if (
+                    leftOperand?.val === undefined ||
+                    rightOperand?.val === undefined
+                ) {
+                    break;
+                }
+                const leftVal = parseInt(leftOperand?.val);
+                const rightVal = parseInt(rightOperand?.val);
+
+                switch (popped?.val) {
+                    case "+":
+                        calcAns = leftVal + rightVal;
+                        break;
+                    case "-":
+                        calcAns = leftVal - rightVal;
+                        break;
+                    case "*":
+                        calcAns = leftVal * rightVal;
+                        break;
+                    case "/":
+                        calcAns = leftVal / rightVal;
+                        break;
+                    case "^":
+                        calcAns = Math.pow(leftVal, rightVal);
+                        break;
+                }
+
+                // push calculated answer to stack
+                setStackList((oldList) => {
+                    if (oldList === undefined) oldList = [];
+                    const newList: StackItem[] = [
+                        { val: calcAns.toString(), highlight: true },
+                        ...oldList,
+                    ];
+                    stackRef.current = newList;
+                    return newList;
+                });
+                await wait(waitTime.current * 1000);
+                if (ogSimCount !== simCount.current) break;
+            } else {
+                // token is operand
+                setPostfixHighlight("2");
+                await wait(waitTime.current * 1000);
+
+                if (ogSimCount !== simCount.current) break;
+                setPostfixHighlight("3");
+
+                // remove the token from input
+                let popped: StackItem | undefined = undefined;
+                setInputList((oldList) => {
+                    const temp = oldList?.shift();
+                    if (temp !== undefined) popped = temp;
+                    inputRef.current = oldList;
+                    return oldList;
+                });
+
+                // push the token to stack
+                setStackList((oldList) => {
+                    if (oldList === undefined) oldList = [];
+                    const newList =
+                        popped === undefined ? oldList : [popped, ...oldList];
+                    stackRef.current = newList;
+                    return newList;
+                });
+                await wait(waitTime.current * 1000);
+                if (ogSimCount !== simCount.current) break;
+            }
+
+            // unhighlight the stack
+            setStackList((oldList) => {
+                if (oldList === undefined) return oldList;
+                oldList.forEach((item) => (item.highlight = false));
+                return oldList;
+            });
+        }
+
+        // last item on stack is answer
+        setPostfixHighlight("11");
+        setStackList((oldList) => {
+            if (oldList === undefined) return oldList;
+            if (oldList.length !== 1) {
+                if (!hasError) {
+                    console.error("Invalid Postfix expression");
+                    Swal.fire({
+                        title: "Invalid Input Data!",
+                        text: "Reached end of algorithm but stack did not have 1 element, indicating faulty input",
+                        icon: "error",
+                        confirmButtonText: "Okay",
+                    });
+                }
+            }
+
+            oldList[0] = { ...oldList[0], highlight: true };
+            stackRef.current = oldList;
+            return oldList;
+        });
+
+        if (stackRef?.current?.length === 1)
+            await wait(waitTime.current * 10 * 1000);
+
+        isRunning.current = false;
+
+        resetToExpression();
+    };
     return (
         <div className="flex justify-center items-center flex-col md:flex-row m-6 md:m-2">
             <div className="md:m-12 md:mr-6 md:shrink lg:w-3/5">
@@ -76,7 +356,8 @@ stack should only have one item: answer`;
                         </p>
                     </div>
                     <ParagraphHeader>
-                        How to evaluate Postfix expressions with a stack?
+                        How to evaluate Postfix and Prefix expressions with a
+                        stack?
                     </ParagraphHeader>
                     <div className="text-sm">
                         <p className="mb-2 w-4/5">
@@ -95,6 +376,7 @@ stack should only have one item: answer`;
                                     language={"text"}
                                     theme={monokai}
                                     showLineNumbers
+                                    highlight={postfixHighlight}
                                 />
                             </div>
                             <div className="lg:w-2/5">
@@ -104,27 +386,63 @@ stack should only have one item: answer`;
                                     language={"text"}
                                     theme={monokai}
                                     showLineNumbers
+                                    highlight={prefixHighlight}
                                 />
                             </div>
                         </div>
                     </div>
                 </TextPanel>
             </div>
-            {/* <div className="m-auto my-4 w-vis-container h-fit px-3 rounded-xl bg-ajay-blue shrink-0 md:mt-0 md:ml-0 mt-4 md:mr-4 ">
-                <div className="m-auto w-vis mt-3">
+            <div className="m-auto my-4 w-full md:w-vis-container h-fit px-3 rounded-xl bg-ajay-blue shrink-0 md:mt-0 md:ml-0 md:mr-4 ">
+                <div className="m-auto md:w-vis mt-3">
                     <div className="text-center text-lg">
                         Stack Evaluation Visualizer
                     </div>
-                    <div className={`bg-gray-300 w-vis h-[350px] mt-3`}></div>
+                    <div className={`bg-gray-300 h-[350px] mt-3`}>
+                        <div className="flex h-full">
+                            <div className="flex flex-grow justify-center">
+                                <VerticalList
+                                    list={inputList}
+                                    bottomElem={
+                                        <div className="m-2 text-black text-center">
+                                            Input
+                                        </div>
+                                    }
+                                />
+                            </div>
+                            <div className="flex flex-grow justify-center">
+                                <VerticalList
+                                    list={stackList}
+                                    bottomElem={
+                                        <div className="m-2 text-black text-center">
+                                            Stack
+                                        </div>
+                                    }
+                                />
+                            </div>
+                        </div>
+                    </div>
                     <div className="flex justify-center my-3">
                         <GenerateBar
-                            text={"Prefix to Postfix"}
+                            text={"Evaluate Postfix Expression"}
                             onSubmit={(newVal) => {
                                 expression.current = newVal;
                                 resetToExpression();
                             }}
                             initialInput={expression.current}
                         />
+                    </div>
+                    <div className="flex justify-center">
+                        <Button
+                            onClick={async () => {
+                                if (!isRunning.current) {
+                                    resetToExpression();
+                                    triggerPostfix.current = true;
+                                }
+                            }}
+                        >
+                            Evaluate Postfix
+                        </Button>
                     </div>
                     <div className="flex justify-center mb-6">
                         <Slider
@@ -134,7 +452,7 @@ stack should only have one item: answer`;
                         />
                     </div>
                 </div>
-            </div> */}
+            </div>
         </div>
     );
 };
