@@ -443,6 +443,7 @@ stack should only have one item: answer`;
                                             triggerPrefix.current = true;
                                         }}
                                         initialInput={prefixExpression.current}
+                                        prefixOnRandom
                                     />
                                 </div>
                             </div>
@@ -499,6 +500,7 @@ stack should only have one item: answer`;
                                 triggerPrefix.current = true;
                             }}
                             initialInput={prefixExpression.current}
+                            prefixOnRandom
                         />
                     </div>
                     <div className="flex justify-center mb-6">

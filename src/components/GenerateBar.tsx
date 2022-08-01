@@ -1,10 +1,12 @@
 import { useState } from "react";
 import randomPostorders from "src/data/randomPostorders";
+import randomPreorders from "src/data/randomPreorders";
 
 interface Props {
     text: string;
     onSubmit: (newGen: string) => void;
     initialInput: string;
+    prefixOnRandom?: boolean;
 }
 
 const GenerateBar: React.FC<Props> = (props) => {
@@ -41,13 +43,21 @@ const GenerateBar: React.FC<Props> = (props) => {
                         className="h-full bg-orange-400 text-white active:bg-orange-500 font-bold uppercase text-xxs p-1 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
                         type="button"
                         onClick={() =>
-                            setCustomInput(
-                                randomPostorders[
-                                    Math.floor(
-                                        Math.random() * randomPostorders.length
-                                    )
-                                ]
-                            )
+                            setCustomInput(() => {
+                                return props.prefixOnRandom
+                                    ? randomPreorders[
+                                          Math.floor(
+                                              Math.random() *
+                                                  randomPostorders.length
+                                          )
+                                      ]
+                                    : randomPostorders[
+                                          Math.floor(
+                                              Math.random() *
+                                                  randomPostorders.length
+                                          )
+                                      ];
+                            })
                         }
                     >
                         Random
