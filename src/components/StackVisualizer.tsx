@@ -12,12 +12,15 @@ import Swal from "sweetalert2";
 import { flushSync } from "react-dom";
 
 interface Props {
-    initialExpression: string;
+    initialPostfixExpression: string;
+    initialPrefixExpression: string;
 }
 
 const StackVisualizer: React.FC<Props> = (props) => {
     const waitTime = useRef(0.2);
-    const expression = useRef(props.initialExpression);
+    const postfixExpression = useRef(props.initialPostfixExpression);
+    const prefixExpression = useRef(props.initialPrefixExpression);
+
     const isRunning = useRef(false);
     const [inputList, setInputList] = useState<StackItem[] | undefined>();
     const inputRef = useRef<StackItem[] | undefined>([]);
@@ -31,6 +34,7 @@ const StackVisualizer: React.FC<Props> = (props) => {
     const simCount = useRef(0);
 
     const rawExpressionToStackList = (expr: string) => {
+        if (expr === undefined) return;
         const exploded = expr.split(" ");
         const ans: StackItem[] = [];
         exploded.forEach((val) => {
@@ -56,28 +60,38 @@ const StackVisualizer: React.FC<Props> = (props) => {
 
     const inputListLoaded = useRef(false);
     const triggerPostfix = useRef(false);
+    const triggerPrefix = useRef(false);
 
-    const resetToExpression = () => {
+    const resetToExpression = (isPostfix: boolean) => {
         triggerPostfix.current = false;
+        triggerPrefix.current = false;
         simCount.current++;
         setInputList(() => {
             inputListLoaded.current = true;
-            return rawExpressionToStackList(expression.current);
+            return rawExpressionToStackList(
+                isPostfix ? postfixExpression.current : prefixExpression.current
+            );
         });
         setPostfixHighlight("");
+        setPrefixHighlight("");
         setStackList(undefined);
     };
 
     useEffect(() => {
-        if (inputListLoaded && triggerPostfix.current) {
-            evaluatePostfix();
+        if (inputListLoaded) {
+            if (triggerPostfix.current) {
+                evaluateExpression(true);
+                triggerPostfix.current = false;
+            } else if (triggerPrefix.current) {
+                evaluateExpression(false);
+                triggerPrefix.current = false;
+            }
             inputListLoaded.current = false;
-            triggerPostfix.current = false;
         }
     }, [inputList]);
 
     useEffect(() => {
-        resetToExpression();
+        resetToExpression(true);
     }, []);
 
     const postfixCode = `for each token in input {
@@ -104,7 +118,12 @@ stack should only have one item: answer`;
 }
 stack should only have one item: answer`;
 
-    const evaluatePostfix = async () => {
+    const setHighlight = (isPostfix: boolean, lines: string) => {
+        if (isPostfix) setPostfixHighlight(lines);
+        else setPrefixHighlight(lines);
+    };
+
+    const evaluateExpression = async (isPostfix: boolean) => {
         if (inputList === undefined || inputList.length === 0) return false; // inputList hasnt been loaded in yet
         isRunning.current = true;
         inputRef.current = inputList;
@@ -115,9 +134,13 @@ stack should only have one item: answer`;
         while (inputRef.current.length > 0) {
             // highlight top input token
             let top: StackItem | undefined;
-            setPostfixHighlight("1");
+            setHighlight(isPostfix, "1");
             setInputList((oldList) => {
-                const temp = oldList?.at(0);
+                let temp = oldList?.at(0);
+                if (!isPostfix) {
+                    // get from bottom
+                    temp = oldList?.at(oldList.length - 1);
+                }
                 if (temp !== undefined) {
                     temp.highlight = true;
                     top = temp;
@@ -137,14 +160,14 @@ stack should only have one item: answer`;
 
             // check if token is operator
             if (operators.has(top.val)) {
-                setPostfixHighlight("4");
+                setHighlight(isPostfix, "4");
                 await wait(waitTime.current * 1000);
                 if (ogSimCount !== simCount.current) break;
 
                 // remove the token (operator) from input
                 let popped: StackItem | undefined;
                 setInputList((oldList) => {
-                    const temp = oldList?.shift();
+                    const temp = isPostfix ? oldList?.shift() : oldList?.pop();
                     if (temp !== undefined) {
                         popped = temp;
                     }
@@ -153,7 +176,8 @@ stack should only have one item: answer`;
                 });
 
                 // highlight the top 2 from stack
-                setPostfixHighlight("5-7");
+                setHighlight(isPostfix, "5-7");
+
                 setStackList((oldList) => {
                     if (oldList === undefined) return oldList;
                     oldList[0] = { ...oldList[0], highlight: true };
@@ -215,7 +239,7 @@ stack should only have one item: answer`;
 
                 await wait(waitTime.current * 1000);
                 if (ogSimCount !== simCount.current) break;
-                setPostfixHighlight("8-9");
+                setHighlight(isPostfix, "8-9");
 
                 // perform operation
                 let calcAns = 0;
@@ -233,16 +257,22 @@ stack should only have one item: answer`;
                         calcAns = leftVal + rightVal;
                         break;
                     case "-":
-                        calcAns = leftVal - rightVal;
+                        calcAns = isPostfix
+                            ? leftVal - rightVal
+                            : rightVal - leftVal;
                         break;
                     case "*":
                         calcAns = leftVal * rightVal;
                         break;
                     case "/":
-                        calcAns = leftVal / rightVal;
+                        calcAns = isPostfix
+                            ? leftVal / rightVal
+                            : rightVal / leftVal;
                         break;
                     case "^":
-                        calcAns = Math.pow(leftVal, rightVal);
+                        calcAns = isPostfix
+                            ? Math.pow(leftVal, rightVal)
+                            : Math.pow(rightVal, leftVal);
                         break;
                 }
 
@@ -260,17 +290,18 @@ stack should only have one item: answer`;
                 if (ogSimCount !== simCount.current) break;
             } else {
                 // token is operand
-                setPostfixHighlight("2");
+                setHighlight(isPostfix, "2");
                 await wait(waitTime.current * 1000);
 
                 if (ogSimCount !== simCount.current) break;
-                setPostfixHighlight("3");
+                setHighlight(isPostfix, "3");
 
-                // remove the token from input
-                let popped: StackItem | undefined = undefined;
+                let popped: StackItem | undefined;
                 setInputList((oldList) => {
-                    const temp = oldList?.shift();
-                    if (temp !== undefined) popped = temp;
+                    const temp = isPostfix ? oldList?.shift() : oldList?.pop();
+                    if (temp !== undefined) {
+                        popped = temp;
+                    }
                     inputRef.current = oldList;
                     return oldList;
                 });
@@ -296,7 +327,7 @@ stack should only have one item: answer`;
         }
 
         // last item on stack is answer
-        setPostfixHighlight("11");
+        setHighlight(isPostfix, "11");
         setStackList((oldList) => {
             if (oldList === undefined) return oldList;
             if (oldList.length !== 1) {
@@ -321,7 +352,7 @@ stack should only have one item: answer`;
 
         isRunning.current = false;
 
-        resetToExpression();
+        resetToExpression(isPostfix);
     };
     return (
         <div className="flex justify-center items-center flex-col md:flex-row m-6 md:m-2">
@@ -426,23 +457,23 @@ stack should only have one item: answer`;
                         <GenerateBar
                             text={"Evaluate Postfix Expression"}
                             onSubmit={(newVal) => {
-                                expression.current = newVal;
-                                resetToExpression();
+                                postfixExpression.current = newVal;
+                                resetToExpression(true);
+                                triggerPostfix.current = true;
                             }}
-                            initialInput={expression.current}
+                            initialInput={postfixExpression.current}
                         />
                     </div>
-                    <div className="flex justify-center">
-                        <Button
-                            onClick={async () => {
-                                if (!isRunning.current) {
-                                    resetToExpression();
-                                    triggerPostfix.current = true;
-                                }
+                    <div className="flex justify-center my-3">
+                        <GenerateBar
+                            text={"Evaluate Prefix Expression"}
+                            onSubmit={(newVal) => {
+                                prefixExpression.current = newVal;
+                                resetToExpression(false);
+                                triggerPrefix.current = true;
                             }}
-                        >
-                            Evaluate Postfix
-                        </Button>
+                            initialInput={prefixExpression.current}
+                        />
                     </div>
                     <div className="flex justify-center mb-6">
                         <Slider

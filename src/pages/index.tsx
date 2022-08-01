@@ -83,7 +83,10 @@ const Home: React.FC = () => {
                 </div>
             </div>
             <TreeVisualizer initialExpression="8 2 3 * - 7 +" />
-            <StackVisualizer initialExpression="8 2 3 * - 7 +" />
+            <StackVisualizer
+                initialPostfixExpression="8 2 3 * - 7 +"
+                initialPrefixExpression="+ - 8 * 2 3 7"
+            />
         </Layout>
     );
 };
