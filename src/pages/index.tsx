@@ -18,8 +18,7 @@ const Home: React.FC = () => {
                             <strong>Operators</strong> are symbols like +, -, *,
                             ^, anything that operates on... <br />
                             <strong>Operands</strong>, which are values like 8,
-                            21, or even complex terms like 7 * 2 - 3; things to
-                            be operated on.
+                            21; things to be operated on.
                         </p>
                         <ParagraphHeader>The Three Notations</ParagraphHeader>
                         <div className="text-sm">
@@ -28,7 +27,7 @@ const Home: React.FC = () => {
                             operator is <em>in</em> between the operands. It's
                             the one we're all familiar with.
                             <br />
-                            ex:
+                            Ex:
                             <ul className="ml-4 list-disc list-inside">
                                 <li>24 / 7</li>
                                 <li>8 - 2 * 3 + 7</li>
@@ -39,7 +38,7 @@ const Home: React.FC = () => {
                             <strong>Polish notation</strong>- is where the
                             operator sits <em>before</em> the operands.
                             <br />
-                            ex:
+                            Ex:
                             <ul className="ml-4 list-disc list-inside">
                                 <li>/ 24 7</li>
                                 <li>+ - 8 * 2 3 7</li>
@@ -50,7 +49,7 @@ const Home: React.FC = () => {
                             <strong>Reverse Polish Notation</strong> or RPN- is
                             where the operator sits <em>after</em> the operands.
                             <br />
-                            ex:
+                            Ex:
                             <ul className="ml-4 list-disc list-inside">
                                 <li>24 7 /</li>
                                 <li>8 2 3 * - 7 +</li>
@@ -64,12 +63,11 @@ const Home: React.FC = () => {
                             had to evaluate the multiplication before the
                             subtraction and finally the addition? This is
                             inconvenient for computers to evaluate as
-                            parentheses need to be applied as needed according
-                            to the order of operations. However, prefix and
-                            postfix notation don't suffer from this ambiguity
-                            and follow an easy and consistent set of
-                            instructions to evaluate, making it very suitable
-                            for computers!
+                            parentheses need to be applied according to the
+                            order of operations. However, prefix and postfix
+                            notation don't suffer from this ambiguity and follow
+                            an easy and consistent set of instructions to
+                            evaluate, making it very suitable for computers!
                         </p>
                     </TextPanel>
                 </div>

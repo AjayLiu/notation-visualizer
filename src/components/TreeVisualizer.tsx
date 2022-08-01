@@ -256,10 +256,10 @@ const TreeVisualizer: React.FC<Props> = (props) => {
                     <ParagraphHeader>Expression Tree</ParagraphHeader>
                     <p className="text-sm">
                         <strong>Expression Trees</strong> are binary trees whose
-                        parent nodes are operators, and leaf nodes are operands
-                        which the operators will execute on. Refer to the
-                        Expression Tree Visualizer for the Expression Tree
-                        representation of the expression (8 - 2 * 3 + 7).
+                        parent nodes are operators and children nodes are
+                        operands of which the operators will execute on. Refer
+                        to the Expression Tree Visualizer for the Expression
+                        Tree representation of the expression (8 - 2 * 3 + 7).
                     </p>
                     <ParagraphHeader>
                         What's so special about it?
@@ -267,9 +267,9 @@ const TreeVisualizer: React.FC<Props> = (props) => {
                     <p className="text-sm">
                         There are three basic ways to traverse binary trees:
                         <strong> Preorder, Inorder, and Postorder.</strong>{" "}
-                        Sound familiar? Yup, preorder traversal outputs prefix
-                        notation, inorder outputs infix, postorder outputs
-                        postfix!
+                        Sound familiar? Yup, for expression trees, preorder
+                        traversal outputs prefix notation, inorder outputs
+                        infix, postorder outputs postfix!
                     </p>
                     <ParagraphHeader>
                         How do these three traversals work?
