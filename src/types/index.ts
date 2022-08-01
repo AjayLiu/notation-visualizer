@@ -17,3 +17,8 @@ export interface TraversalParams {
     root: MyTreeNode | undefined;
     mySimCount: number;
 }
+
+export interface StackItem {
+    val: string;
+    highlight: boolean;
+}

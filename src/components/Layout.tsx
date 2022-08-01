@@ -36,7 +36,7 @@ const Layout: React.FC<Props> = (props) => {
                     content="An interactive website to visualize how Infix, Prefix (Polish), and Postfix (Reverse Polish) notation are converted and evaluated."
                 />
             </Head>
-            <div className="w-full h-full bg-ajay text-white">
+            <div className="w-100vw h-full bg-ajay text-white overflow-x-hidden">
                 <Header />
 
                 <main className="min-h-[60vh]">{props.children}</main>

@@ -16,6 +16,7 @@ import { MyTreeNode, TraversalParams } from "src/types";
 import Swal from "sweetalert2";
 import ParagraphHeader from "./ParagraphHeader";
 import TextPanel from "./TextPanel";
+import { operators, wait } from "../shared/index";
 
 interface Props {
     initialExpression: string;
@@ -24,8 +25,6 @@ const TreeVisualizer: React.FC<Props> = (props) => {
     const [treeData, setTreeData] = useState<RawNodeDatum>({
         name: "Loading...",
     });
-
-    const operators = new Set(["+", "-", "*", "/", "^"]);
 
     const buildExpressionTree = (expression: string) => {
         const terms = expression.split(" ");
@@ -151,10 +150,6 @@ const TreeVisualizer: React.FC<Props> = (props) => {
         return <TreeNode nodeProps={nodeProps} onClickHandler={onNodeClick} />;
     };
 
-    function wait(milliseconds: number) {
-        return new Promise((resolve) => setTimeout(resolve, milliseconds));
-    }
-
     const resultRef = useRef<string[]>([]);
     const clearResults = () => {
         resultRef.current = [];
@@ -255,8 +250,8 @@ const TreeVisualizer: React.FC<Props> = (props) => {
     };
 
     return (
-        <div className="flex justify-center items-center flex-col m-6 md:flex-row md:m-0">
-            <div className=" md:m-12 md:mr-6 md:shrink lg:w-3/5">
+        <div className="flex justify-center items-center flex-col md:flex-row m-6 md:m-2">
+            <div className="md:m-12 md:mr-6 md:shrink lg:w-3/5">
                 <TextPanel header={"What's an Expression Tree?"}>
                     <ParagraphHeader>Expression Tree</ParagraphHeader>
                     <p className="text-sm">
@@ -328,8 +323,8 @@ const TreeVisualizer: React.FC<Props> = (props) => {
                     </div>
                 </TextPanel>
             </div>
-            <div className="m-auto my-4 w-vis-container h-fit px-3 rounded-xl bg-ajay-blue shrink-0 md:mt-0 md:ml-0 mt-4 md:mr-4 ">
-                <div className="m-auto w-vis mt-3">
+            <div className="m-auto my-4 w-full md:w-vis-container h-fit px-3 rounded-xl bg-ajay-blue shrink-0 md:mt-0 md:ml-0 md:mr-4 ">
+                <div className="m-auto md:w-vis mt-3">
                     <div className="text-center text-lg">
                         Expression Tree Visualizer
                     </div>
@@ -338,7 +333,7 @@ const TreeVisualizer: React.FC<Props> = (props) => {
                             it's interactive! (scroll to zoom / drag to pan)!
                         </em>
                     </div>
-                    <div className={`bg-gray-300 w-vis h-vis mt-3`}>
+                    <div className={`bg-gray-300 h-[350px] mt-3 `}>
                         <NoSSRWrapper>
                             <Tree
                                 data={treeData}
@@ -346,7 +341,7 @@ const TreeVisualizer: React.FC<Props> = (props) => {
                                 zoomable
                                 orientation="vertical"
                                 collapsible={false}
-                                zoom={0.5}
+                                zoom={0.7}
                                 translate={{ x: 250 / 2, y: 20 }}
                                 renderCustomNodeElement={nodeRenderer}
                                 separation={{ nonSiblings: 1, siblings: 1 }}
@@ -356,6 +351,7 @@ const TreeVisualizer: React.FC<Props> = (props) => {
                     <ResultList result={resultRef.current} />
                     <div className="flex justify-center my-3">
                         <GenerateBar
+                            text="Tree Data (postorder, space-separated)"
                             onSubmit={(newVal) => {
                                 expression.current = newVal;
                                 resetToExpression();

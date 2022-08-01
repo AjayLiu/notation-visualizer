@@ -2,6 +2,7 @@ import { useState } from "react";
 import randomPostorders from "src/data/randomPostorders";
 
 interface Props {
+    text: string;
     onSubmit: (newGen: string) => void;
     initialInput: string;
 }
@@ -11,7 +12,7 @@ const GenerateBar: React.FC<Props> = (props) => {
     return (
         <div className="text-center w-full">
             <label htmlFor="Custom Tree Input" className="">
-                Tree Data (postorder, space-separated)
+                {props.text}
             </label>
             <div className="flex items-center mt-1 h-6 w-full">
                 <input
