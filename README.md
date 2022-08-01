@@ -8,6 +8,7 @@
   <p align="center">
     Visualize how infix/prefix/postfix notation is evaluated with trees and stacks in an interactive website!
     <br />
+    <a href="http://notation-visualizer.ajayliu.com/"><strong>Website »</strong></a>
 </p>
 
 <!-- TABLE OF CONTENTS -->
@@ -29,6 +30,7 @@
         <li><a href="#deployment">Deployment</a></li>
       </ul>
     </li>
+    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
@@ -40,7 +42,7 @@
 ## About The Project
 <img src="https://github.com/AjayLiu/notation-visualizer/blob/main/public/img/notation-demo.gif"></img>
 
-I learned about infix/prefix/postfix notation during my senior year of high school and I find it fascinating that you can evaluate them using both trees and stacks! It's a great way to learn about inorder/preorder/postorder traversal and basic computer science!
+I learned about infix/prefix/postfix notation during my senior year of high school and I find it fascinating that you can evaluate them using both trees and stacks! It's a great way to learn about inorder/preorder/postorder traversal and basic computer science! This website contains two interactive visualizers: a Tree Visualizer and a Stack Visualizer. 
 
 ### Built With
 
@@ -84,6 +86,26 @@ Then head over to localhost:3000
 ### Deployment
 
 1. Publish the site on Netlify using continuous git integration. :tada:
+
+<!-- CONTRIBUTING -->
+
+## Contributing
+
+### Issues
+
+Feel free to submit issues and enhancement requests. Also, submit an issue before submitting pull requests. Look through existing issues and see if you want to help out!
+
+### Workflow
+
+Please refer to each project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
+
+ 1. **Fork** the repo on GitHub
+ 2. **Clone** the project to your own machine
+ 3. **Commit** changes to your own branch
+ 4. **Push** your work back up to your fork
+ 5. Submit a **Pull request** so that we can review your changes
+
+NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 <!-- LICENSE -->
 
