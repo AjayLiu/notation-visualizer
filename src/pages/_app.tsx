@@ -1,12 +1,24 @@
 import type { AppProps } from "next/app";
+import Script from "next/script";
 
 import "@styles/index.css";
 
-import GoogleAnalyticsHook from "@components/GoogleAnalyticsHook";
 function Application({ Component, pageProps }: AppProps) {
     return (
         <>
-            <GoogleAnalyticsHook />
+            <Script
+                src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
+                strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+                {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-6MM8WDDYDD');
+        `}
+            </Script>
             <Component {...pageProps} />
         </>
     );
