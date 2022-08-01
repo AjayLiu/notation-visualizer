@@ -1,6 +1,10 @@
-<p align="center">
-  <h3 align="center">Notation Visualizer</h3>
+[![Netlify Status](https://api.netlify.com/api/v1/badges/eb101c57-1b01-4b67-8727-08b317214a9e/deploy-status)](https://app.netlify.com/sites/notation-visualizer/deploys)
 
+<p align="center">
+  <a href="https://github.com/AjayLiu/notation-visualizer">
+    <img src="public/img/calculator.svg" alt="Logo" width="80" height="80">
+  </a>
+  <h3 align="center">Notation Visualizer</h3>
   <p align="center">
     Visualize how infix/prefix/postfix notation is evaluated with trees and stacks in an interactive website!
     <br />
@@ -34,6 +38,7 @@
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
+<img src="https://github.com/AjayLiu/notation-visualizer/blob/main/public/img/notation-demo.gif"></img>
 
 I learned about infix/prefix/postfix notation during my senior year of high school and I find it fascinating that you can evaluate them using both trees and stacks! It's a great way to learn about inorder/preorder/postorder traversal and basic computer science!
 
@@ -59,7 +64,7 @@ Here is a guide if you want to clone this template and modify it for yourself, a
 
 1. Clone the repo
     ```sh
-    git clone https://github.com/AjayLiu/ajayliu.com.git
+    git clone https://github.com/AjayLiu/notation-visualizer.git
     ```
 2. Install packages
     ```sh
@@ -97,3 +102,7 @@ Project Link: [https://github.com/AjayLiu/notation-visualizer](https://github.co
 <!-- ACKNOWLEDGEMENTS -->
 
 ## Acknowledgements
+- [UCSB Professor Michael Costanzo's pseudocode for evaluating expressions and expression trees](https://sites.cs.ucsb.edu/~mikec/cs12/slides/week08c.pdf)
+- [react-d3-tree](https://github.com/bkrem/react-d3-tree)
+- [sweetalert](https://www.npmjs.com/package/sweetalert)
+- [Netlify](https://www.netlify.com/)
