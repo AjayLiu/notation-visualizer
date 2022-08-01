@@ -409,6 +409,19 @@ stack should only have one item: answer`;
                                     showLineNumbers
                                     highlight={postfixHighlight}
                                 />
+                                <div className="flex justify-center my-3">
+                                    <GenerateBar
+                                        text={
+                                            "Run Visualizer - Evaluate Postfix Expression"
+                                        }
+                                        onSubmit={(newVal) => {
+                                            postfixExpression.current = newVal;
+                                            resetToExpression(true);
+                                            triggerPostfix.current = true;
+                                        }}
+                                        initialInput={postfixExpression.current}
+                                    />
+                                </div>
                             </div>
                             <div className="lg:w-2/5">
                                 <p className="my-2">Prefix Pseudocode:</p>
@@ -419,6 +432,19 @@ stack should only have one item: answer`;
                                     showLineNumbers
                                     highlight={prefixHighlight}
                                 />
+                                <div className="flex justify-center my-3">
+                                    <GenerateBar
+                                        text={
+                                            "Run Visualizer - Evaluate Prefix Expression"
+                                        }
+                                        onSubmit={(newVal) => {
+                                            prefixExpression.current = newVal;
+                                            resetToExpression(false);
+                                            triggerPrefix.current = true;
+                                        }}
+                                        initialInput={prefixExpression.current}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
