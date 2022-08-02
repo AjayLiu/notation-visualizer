@@ -86,9 +86,8 @@ const Home: React.FC = () => {
                 initialPostfixExpression="8 2 3 * - 7 +"
                 initialPrefixExpression="+ - 8 * 2 3 7"
             />
-
             <div className="flex justify-center items-center flex-col m-6 md:flex-row md:m-0">
-                <div className=" md:m-12 md:mr-6 md:shrink lg:w-3/5">
+                <div className="w-full md:m-12 md:mr-6 md:shrink lg:w-3/5">
                     <TextPanel header="For more information">
                         <br />
                         <p>
@@ -98,9 +97,11 @@ const Home: React.FC = () => {
                             won't be able to meet him in college :({" "}
                         </p>
                         <br />
-                        <ExternalLink href="https://sites.cs.ucsb.edu/~mikec/cs12/slides/week08c.pdf">
-                            https://sites.cs.ucsb.edu/~mikec/cs12/slides/week08c.pdf
-                        </ExternalLink>
+                        <div className="truncate">
+                            <ExternalLink href="https://sites.cs.ucsb.edu/~mikec/cs12/slides/week08c.pdf">
+                                https://sites.cs.ucsb.edu/~mikec/cs12/slides/week08c.pdf
+                            </ExternalLink>
+                        </div>
                     </TextPanel>
                 </div>
             </div>
