@@ -1,3 +1,4 @@
+import ExternalLink from "@components/ExternalLink";
 import Layout from "@components/Layout";
 import ParagraphHeader from "@components/ParagraphHeader";
 import StackVisualizer from "@components/StackVisualizer";
@@ -85,6 +86,24 @@ const Home: React.FC = () => {
                 initialPostfixExpression="8 2 3 * - 7 +"
                 initialPrefixExpression="+ - 8 * 2 3 7"
             />
+
+            <div className="flex justify-center items-center flex-col m-6 md:flex-row md:m-0">
+                <div className=" md:m-12 md:mr-6 md:shrink lg:w-3/5">
+                    <TextPanel header="For more information">
+                        <br />
+                        <p>
+                            While reviewing information about this topic, I
+                            primarily used UCSB Lecturer Mike Costanza's slides
+                            for CS12 linked below. Sadly he retired in 2018 so I
+                            won't be able to meet him in college :({" "}
+                        </p>
+                        <br />
+                        <ExternalLink href="https://sites.cs.ucsb.edu/~mikec/cs12/slides/week08c.pdf">
+                            https://sites.cs.ucsb.edu/~mikec/cs12/slides/week08c.pdf
+                        </ExternalLink>
+                    </TextPanel>
+                </div>
+            </div>
         </Layout>
     );
 };
