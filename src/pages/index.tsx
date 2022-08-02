@@ -17,7 +17,7 @@ const Home: React.FC = () => {
                         <ParagraphHeader>Operators vs Operands</ParagraphHeader>
                         <p className="text-sm">
                             <strong>Operators</strong> are symbols like +, -, *,
-                            ^, anything that operates on... <br />
+                            /, ^, anything that operates on... <br />
                             <strong>Operands</strong>, which are values like 8,
                             21; things to be operated on.
                         </p>
