@@ -90,6 +90,20 @@ const Home: React.FC = () => {
                 <div className="w-full md:m-12 md:mr-6 md:shrink lg:w-3/5">
                     <TextPanel header="For more information">
                         <br />
+                        <div>
+                            I filmed an explainer video using this website:
+                            <div className="my-8 md:w-1/2">
+                                <div className="aspect-w-16 aspect-h-9">
+                                    <iframe
+                                        src="https://www.youtube.com/embed/3RhLATMb7OI"
+                                        title="What is Prefix, Infix, Postfix Notation | Introductory Computer Science | Notation Visualizer"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
+                            </div>
+                        </div>
                         <p>
                             While reviewing information about this topic, I
                             primarily used UCSB Lecturer Mike Costanza's slides
