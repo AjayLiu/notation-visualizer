@@ -399,7 +399,7 @@ stack should only have one item: answer`;
                             since it is reversed, the left and right operands
                             are flipped too!{" "}
                         </p>
-                        <div className="md:flex justify-evenly overflow-hidden">
+                        <div className="lg:flex justify-evenly overflow-hidden">
                             <div className="lg:w-2/5">
                                 <p className="my-2">Postfix Pseudocode:</p>
                                 <CodeBlock
